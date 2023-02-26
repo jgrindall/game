@@ -20,26 +20,20 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import { defineComponent, watch } from 'vue';
 
-    @Component({
-        components: {
-
+    export default defineComponent({
+        mounted() {
+            
+        },
+        methods:{
+            onClickNew(){},
+            onClickLoad(){},
+            onClickSave(){},
+            onClickPlay(){}
         }
     })
-    export default class Toolbar extends Vue {
 
-        onClickNew(){}
-        onClickLoad(){}
-        onClickSave(){}
-        onClickPlay(){}
-
-        mounted() {
-            $(document).ready(async () => {
-                (PM as any).ToolbarHandler.initialize($(this.$el));
-            });
-        }
-    }
 </script>
 
 

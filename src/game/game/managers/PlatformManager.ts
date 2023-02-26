@@ -1,6 +1,4 @@
 import Phaser from "phaser";
-import Element from "../../../../pip/elements/Element";
-import {GameObject} from "../../../../pip/elements/types";
 
 enum Directions {
     UP = "up",
@@ -28,13 +26,13 @@ class PlatformManager{
         this._scene = scene;
     }
 
-    remove(gameObj:GameObject){
+    remove(gameObj:any){
 
     }
 
     update(){
         this._platforms.forEach(platform=>{
-            const gameObj = platform.getGameObject();
+           /*  const gameObj = platform.getGameObject();
             const data = gameObj.data.getAll() as PlatformData;
             const body:Phaser.Physics.Arcade.Body = (gameObj.body as Phaser.Physics.Arcade.Body);
             if(dir === Directions.UP && gameObj.y < data._top){
@@ -43,7 +41,7 @@ class PlatformManager{
             else if(dir === Directions.DOWN && gameObj.y > data._bottom){
                 dir = Directions.UP;
             }
-            body.setVelocityY(this._enabled ? (dir === Directions.UP ? -data._speed : data._speed) : 0);
+            body.setVelocityY(this._enabled ? (dir === Directions.UP ? -data._speed : data._speed) : 0); */
         });
     }
 
@@ -53,7 +51,7 @@ class PlatformManager{
     }
 
     add(element:Element){
-        const gameObj = element.getGameObject();
+        /* const gameObj = element.getGameObject();
         const data = gameObj.data.getAll() as PlatformData;
         //TODO - merge this data in??
         const body:Phaser.Physics.Arcade.Body = (gameObj.body as Phaser.Physics.Arcade.Body);
@@ -65,7 +63,7 @@ class PlatformManager{
         body.checkCollision.left = false;
         body.checkCollision.right = false;
         body.checkCollision.up = true;
-        this._platforms.push(element);
+        this._platforms.push(element); */
     }
 }
 

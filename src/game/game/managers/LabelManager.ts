@@ -1,12 +1,9 @@
 import Label from "../../components/Label";
 import Phaser from "phaser";
 import {updateInteractiveBounds} from "../../utils/Utils";
-import {Info} from "../../types";
 import BaseScene from "../BaseScene";
-import {GameObject} from "../../../../pip/elements/types";
 
 type LabelInfo = {
-    gameObj:GameObject,
     text:string,
     label:Label,
     detected: boolean,
@@ -43,45 +40,45 @@ class LabelManager{
      * Stop listening for hover on this element - this happens when the element is destroyed, so it is safe to remove all listeners like this
      * @param gameObj
      */
-    remove(gameObj:GameObject){
+    remove(gameObj:any){
         if(gameObj){
             gameObj
                 .off('pointerover')
                 .off('pointerout');
         }
         this.labelInfo = _.reject(this.labelInfo, (entry:LabelInfo)=>{
-            return entry.gameObj === gameObj;
+            
         });
     }
 
-    private getForGameObject(gameObj: GameObject){
-        return this.labelInfo.find(entry=>entry.gameObj === gameObj);
+    private getForGameObject(gameObj: any):any{
+        //return this.labelInfo.find(entry=>entry.gameObj === gameObj);
     }
 
-    setDetected(gameObj:GameObject, isDetected:boolean){
+    setDetected(gameObj:any, isDetected:boolean){
         const entry = this.getForGameObject(gameObj);
         if(entry){
             entry.detected = isDetected;
         }
     }
 
-    setOver(gameObj:GameObject, isOver:boolean){
+    setOver(gameObj:any, isOver:boolean){
         const entry = this.getForGameObject(gameObj);
         if(entry){
             entry.over = isOver;
         }
     }
 
-    public updateBounds(gameObj:GameObject){
+    public updateBounds(gameObj:any){
         updateInteractiveBounds(gameObj, this._scene.scale.displayScale);
     }
 
     /**
      * Listen for hover on this element
-     * @param {GameObject} gameObj
+     * @param {any} gameObj
      * @param label
      */
-    public add(gameObj:GameObject, label:string){
+    public add(gameObj:any, label:string){
         // @ts-ignore
         const bounds = gameObj.getBounds();
         const scale = this._scene.scale.displayScale;
@@ -90,7 +87,7 @@ class LabelManager{
         const entry = this.getForGameObject(gameObj);
         if(!entry){
             this.labelInfo.push({
-                gameObj: gameObj,
+                //gameObj: gameObj,
                 text:label,
                 label:this._scene.add.label(gameObj.x, gameObj.y, label) as Label,
                 detected: false,
@@ -116,8 +113,8 @@ class LabelManager{
             entry.label.visible = true;
             entry.label.setContents(entry.text);
             const textBounds = entry.label.getContainerBounds();
-            entry.label.x = entry.gameObj.x - textBounds.global.width/2;
-            entry.label.y = entry.gameObj.y - (textBounds.global.height + 2*Label.PADDING);
+            //entry.label.x = entry.gameObj.x - textBounds.global.width/2;
+            //entry.label.y = entry.gameObj.y - (textBounds.global.height + 2*Label.PADDING);
         });
     }
 }

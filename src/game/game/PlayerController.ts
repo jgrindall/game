@@ -65,7 +65,7 @@ class ClimbState extends AState {
 		const left = this.cursors.left.isDown;
 		const right = this.cursors.right.isDown;
 		const floor = this.body.onFloor();
-		let velY, velX = 0;
+		let velY = 0, velX = 0;
 		const speedY = climbSpeed;
 		const speedX = climbSpeed;
 		if(options.ladder){
@@ -136,7 +136,7 @@ class PlayerController{
 	private gameObj: Phaser.GameObjects.Sprite;
 	private body: Phaser.Physics.Arcade.Body;
 	private stateMachine:StateMachine;
-	private ladder:boolean;
+	private ladder:boolean = false;
 	private platform: any;
 	private _enabled: boolean = true;
 	private _states: Record<StateNames, IState>;

@@ -22,13 +22,11 @@
     </div>
 </template>
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
     import CodeView from "./CodeView.vue";
-    import levelModule from "../store/LevelModule";
+    import {useLevelStore} from "../store/LevelModule";
     import progressModule from "../store/ProgressModule";
-    import CodeRunner from "../../../pip/code/CodeRunner";
     import {ISkulptError, ISkulptSuspension, SectionProgressType, SectionStatus} from "../types";
-    import codeModule from "../store/CodeModule";
+    import {useCodeStore} from "../store/CodeModule";
 
     const CODE_DELAY = 500; //ms between each line
 
@@ -40,10 +38,10 @@
     })
     export default class CodeList extends Vue {
 
-        private playTimeout: number;
+        private playTimeout: number = 0;
 
         get sections(){
-            return levelModule.sections;
+            return useLevelStore().sections;
         }
 
         get sectionStatus():SectionStatus{

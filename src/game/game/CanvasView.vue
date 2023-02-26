@@ -1,5 +1,3 @@
-import {SectionProgressType} from "../types";
-import {SectionProgressType} from "../types";
 <template>
     <div class="canvas">
         <canvas id="myCanvas" ref="myCanvas" width="1024" height="768"></canvas>
@@ -11,7 +9,6 @@ import {SectionProgressType} from "../types";
     </div>
 </template>
 <script lang="ts">
-    import {Component, Ref, Vue, Watch} from 'vue-property-decorator';
     import Phaser from "phaser";
     import Scene from "./Scene";
     import Preload from "./Preload";
@@ -23,134 +20,107 @@ import {SectionProgressType} from "../types";
     import HighlightPlugin from "../plugins/HighlightPlugin";
     import {Plugin as NineSlicePlugin} from 'phaser3-nineslice';
     import AnimatedTiles from "../plugins/AnimatedTiles"
+    import { defineComponent, watch } from 'vue';
 
-    @Component({
-        components: {
-
-        },
-        //?? computed: mapGetters(['foo'])
-    })
-
-    export default class CanvasView extends Vue {
-
-        private _game:Phaser.Game;
-        private _scene:Scene;
-
-        @Ref('myCanvas')
-        readonly myCanvas!: HTMLCanvasElement;
-
-        public reset(){
-            this._scene.reset();
-        }
-
-        private get showGrid():boolean{
-            return this.sectionProgress && this.sectionProgress.status === SectionProgressType.CODE;
-        }
-
-        private get enabled(): boolean{
-            // when info is visible the game is frozen
-            if(this.info || ( this.sectionProgress && this.sectionProgress.status === SectionProgressType.CODE)){
-               return false;
-            }
-            return true;
-        }
-
-        private get sectionProgress():SectionStatus{
-            return progressModule.currentSectionStatus;
-        }
-
-        private get sectionIndex():number{
-            return progressModule.currentSectionIndex;
-        }
-
-        private get sections():Section[]{
-            return levelModule.sections;
-        }
-
-        private get info(): Info{
-            return dialogModule.info;
-        }
-
-        private startGame(){
-            const AudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
-            const context = new AudioContext();
-
-            const config = {
-                type: Phaser.WEBGL,
-                scene: [
-                    Preload
-                ],
-
-                canvas: this.myCanvas,
-                scale: {
-                    mode: Phaser.Scale.FIT
-                },
-                audio: {
-                    context: context
-                },
-                plugins: {
-
-                    global: [
-                        NineSlicePlugin.DefaultCfg
-                    ],
+    export default defineComponent({
+        methods:{
+            startGame(){
+                const AudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
+                const context = new AudioContext();
+                const canvas:HTMLCanvasElement = this.$refs["myCanvas"] as HTMLCanvasElement
+                const config = {
+                    type: Phaser.WEBGL,
                     scene: [
-                        {
-                            key: "DialogPlugin",
-                            plugin: DialogPlugin,
-                            mapping: "dialogPlugin",
-                            start: true
-                        },
-                        {
-                            key: 'HighlightPlugin',
-                            plugin: HighlightPlugin,
-                            mapping: 'highlightPlugin',
-                            start: true
-                        },
-                        {
-                            key: 'AnimatedTiles',
-                            plugin: AnimatedTiles,
-                            mapping: "animatedTiles",
-                            start: true
-                        }
-                    ]
-                },
-                crisp: true
-            };
-            this._game = new Phaser.Game(config);
+                        Preload
+                    ],
 
-            this._scene = new Scene();
-            this._game.scene.add("Scene", this._scene, false);
-            this._game.events.on('launch', ()=>{
-                this._game.scene
-                    .remove("Preload")
-                    .start("Scene", {
-                        sections: levelModule.sections
-                    });
-            });
-        }
+                    canvas: canvas,
+                    scale: {
+                        mode: Phaser.Scale.FIT
+                    },
+                    audio: {
+                        context: context
+                    },
+                    plugins: {
 
-        @Watch("sections")
-        onChangeDefn() {
-            if(this.sections && !this._game){
+                        global: [
+                            NineSlicePlugin.DefaultCfg
+                        ],
+                        scene: [
+                            {
+                                key: "DialogPlugin",
+                                plugin: DialogPlugin,
+                                mapping: "dialogPlugin",
+                                start: true
+                            },
+                            {
+                                key: 'HighlightPlugin',
+                                plugin: HighlightPlugin,
+                                mapping: 'highlightPlugin',
+                                start: true
+                            },
+                            {
+                                key: 'AnimatedTiles',
+                                plugin: AnimatedTiles,
+                                mapping: "animatedTiles",
+                                start: true
+                            }
+                        ]
+                    },
+                    crisp: true
+                };
+                this._game = new Phaser.Game(config);
+
+                this._scene = new Scene();
+                this._game.scene.add("Scene", this._scene, false);
+                this._game.events.on('launch', ()=>{
+                    this._game.scene
+                        .remove("Preload")
+                        .start("Scene", {
+                            sections: levelModule.sections
+                        });
+                });
+            }
+        },
+        computed:{
+            showGrid():boolean{
+                return this.sectionProgress && this.sectionProgress.status === SectionProgressType.CODE;
+            },
+            enabled(): boolean{
+                // when info is visible the game is frozen
+                if(this.info || ( this.sectionProgress && this.sectionProgress.status === SectionProgressType.CODE)){
+                return false;
+                }
+                return true;
+            }.
+            sectionProgress():SectionStatus{
+                return progressModule.currentSectionStatus;
+            },
+            sectionIndex():number{
+                return progressModule.currentSectionIndex;
+            },
+            sections():Section[]{
+                return levelModule.sections;
+            },
+            info(): Info{
+                return dialogModule.info;
+            }
+        },
+        watch:{
+            sections(){
+                if(this.sections && !this._game){
                 // sections have loaded
                 this.startGame();
             }
-        }
-
-        @Watch("enabled")
-        onChangeEnabled() {
-            this._scene.setEnabled(this.enabled);
-        }
-
-        @Watch("showGrid")
-        onChangeShowGrid() {
-            this._scene.showGrid(this.showGrid);
-        }
-
-        @Watch("info")
-        onChangeDialog(){
-            // listen to a change in the 'info' and show the right dialog
-            if(this.info){
+            },
+            enabled(){
+                this._scene.setEnabled(this.enabled);
+            },
+            showGrid(){
+                this._scene.showGrid(this.showGrid);
+            },
+            info(){
+                f(this.info){
                 this._scene.dialogPlugin.show(this.info, ()=>{
                     dialogModule.setInfo(null);
                 });
@@ -158,12 +128,9 @@ import {SectionProgressType} from "../types";
             else{
                 this._scene.dialogPlugin.hide();
             }
-        }
-
-        @Watch("sectionProgress")
-        onChangeSectionNum(newValue:SectionStatus, oldValue:SectionStatus) {
-            // the pupil has progressed to the next section
-            console.log(oldValue, "->", newValue);
+            },
+            sectionProgress(){
+                console.log(oldValue, "->", newValue);
             const newStatus = newValue.status;
             if(newStatus === SectionProgressType.COMPLETE){
                 // the player moves to the next starting position
@@ -177,7 +144,8 @@ import {SectionProgressType} from "../types";
                     .setCameraToWaypoint();
 
             }
+            }
         }
+    })
 
-    }
 </script>

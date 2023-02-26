@@ -3,58 +3,45 @@
  */
 
 
-import {Module, Mutation, VuexModule, getModule} from "vuex-module-decorators";
 import store from "./Store";
 import {CodeStatus, Info, Section} from "../types";
 import Vue from "vue";
+import { defineStore } from 'pinia'
 
-@Module({
-    dynamic: true,
-    name: "code",
-    store,
-    namespaced: true
-})
+type State = {
+    status?:CodeStatus,
+    initCode:string[][]
+}
 
-class CodeModule extends VuexModule {
-
-    private _status: CodeStatus = CodeStatus.IDLE;
-    private _initCode: string[][] = [];
-
-    get status():CodeStatus{
-        return this._status;
+export const useCodeStore = defineStore('code', {
+  state: (): State => {
+    return {
+        status: CodeStatus.IDLE,
+        initCode: []
     }
-
-    get initCode(): string[]{
-        const currentSectionIndex = this.context.rootGetters["progress/currentSectionIndex"];
-        console.log('initCode', currentSectionIndex, this._initCode, this._initCode[currentSectionIndex]);
-        return this._initCode[currentSectionIndex];
+  },
+  getters:{
+    initCode(){
+        //const currentSectionIndex = this.context.rootGetters["progress/currentSectionIndex"];
+        //console.log('initCode', currentSectionIndex, this._initCode, this._initCode[currentSectionIndex]);
+        //return this._initCode[currentSectionIndex];
     }
-
-    @Mutation
-    public start() {
-        this._status = CodeStatus.RUNNING;
-    }
-
-    @Mutation
-    public complete() {
-        this._status = CodeStatus.COMPLETE;
-    }
-
-    @Mutation
-    public error() {
-        this._status = CodeStatus.COMPLETE;
-    }
-
-    @Mutation
-    public addElements(payload: {sceneIndex: number, elementNames:string[]}) {
+  },
+  actions: {
+    start() {
+        this.status = CodeStatus.RUNNING;
+    },
+    complete() {
+        this.status = CodeStatus.COMPLETE;
+    },
+    error() {
+        this.status = CodeStatus.COMPLETE;
+    },
+    addElements(payload: {sceneIndex: number, elementNames:string[]}) {
         const code = payload.elementNames.map((name:string)=>{
             return `${name} = pip.getElementByName('${name}')`
         });
-        Vue.set(this._initCode, payload.sceneIndex, code);
-    }
-
-}
-export default getModule(CodeModule);
-
-
-
+        //Vue.set(this._initCode, payload.sceneIndex, code);
+    },
+  }
+})

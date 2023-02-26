@@ -31,7 +31,6 @@
     </div>
 </template>
 <script lang="ts">
-    import {Component, Prop, Ref, Vue, Watch} from 'vue-property-decorator';
     import * as CodeMirror from "codemirror";
     import {EditorChange, EditorChangeCancellable} from "codemirror";
     import {makeCodeMirror} from "../utils/Utils";

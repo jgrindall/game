@@ -3,11 +3,9 @@ import {ElementDefn, Info, PhaserEventData, Section, TiledElementDefn, WayPoint,
 import PlayerController from "./PlayerController";
 import BaseScene from "./BaseScene";
 import progressModule from '../store/ProgressModule';
-import dialogModule from "../store/DialogModule";
-import codeModule from "../store/CodeModule";
-import Element from "../../../pip/elements/Element";
+import {useDialogStore} from "../store/DialogModule";
+import {useCodeStore} from "../store/CodeModule";
 import {getUniqueId} from "../utils/Utils";
-import Label from "../components/Label";
 
 const SIZE = 16384;
 const TILE_SIZE = 64;
@@ -15,23 +13,18 @@ const TILE_SIZE = 64;
 class Scene extends BaseScene{
 
 	private _overlap:Record<string, boolean> = {};
-
-	private _layer2: Phaser.Tilemaps.TilemapLayer;
+	private _layer2?: Phaser.Tilemaps.TilemapLayer = undefined;
 	private _arr:any;
 	private _arr2:any;
-	private _tiles2: Phaser.Tilemaps.Tileset;
-	private _map2: Phaser.Tilemaps.Tilemap;
-
+	private _tiles2?: Phaser.Tilemaps.Tileset = undefined;
+	private _map2?: Phaser.Tilemaps.Tilemap = undefined;
 	private _wayPointImages: Phaser.GameObjects.Image[] = [];
 	//private _infoImages: Phaser.GameObjects.Image[];
-	private _background: Phaser.GameObjects.Image;
-
-	private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
-	private _sections:Section[];
-	private _controller: PlayerController;
-
-	private grid: Phaser.GameObjects.TileSprite;
-
+	private _background?: Phaser.GameObjects.Image = undefined;
+	private cursors?: Phaser.Types.Input.Keyboard.CursorKeys = undefined;
+	private _sections:Section[] = [];
+	private _controller?: PlayerController = undefined;
+	private grid?: Phaser.GameObjects.TileSprite = undefined;
 	private _initCode: string[][] = [];
 
 	//private _laser: Phaser.GameObjects.Image;
@@ -62,7 +55,7 @@ class Scene extends BaseScene{
 
 	public async setCameraToWaypoint(){
 		const index = this.getCurrentSectionIndex();
-		const waypoint:Phaser.GameObjects.Image = this._wayPointImages.find(img => {
+		const waypoint:Phaser.GameObjects.Image | undefined= this._wayPointImages.find(img => {
 			return img.getData("_section") === index && img.getData("_type") === WaypointType.START;
 		});
 		if(waypoint){
@@ -121,7 +114,7 @@ class Scene extends BaseScene{
 
 
 		//this.physics.add.collider(this.player, this._layer);
-		this.physics.add.collider(this.player, this._layer2);
+		this.physics.add.collider(this.player, this._layer2!);
 	}
 
 	private addWaypoints(){
@@ -130,7 +123,7 @@ class Scene extends BaseScene{
 			this.physics.add.existing(obj, true);
 			const body = (obj.body as Phaser.Physics.Arcade.Body);
 			body.allowGravity = false;
-			this.physics.add.overlap(this.player, obj);
+			this.physics.add.overlap(this.player!, obj);
 			this._wayPointImages.push(obj);
 
 			obj.setInteractive(new Phaser.Geom.Rectangle(0, 0, 64, 64), Phaser.Geom.Rectangle.Contains)
@@ -145,14 +138,13 @@ class Scene extends BaseScene{
 							label:"",
 							autoShow: true
 						};
-						dialogModule.setInfo(info);
+						useDialogStore().setInfo(info);
 					}
 				});
 		});
 	}
 
 	public create(){
-		window.Sk.elementManager.manageScene(this);
 		this.getPhysics().world.setBounds(0, 0, SIZE, SIZE);
 		this.getCamera()
 			//TODO - size?
@@ -235,10 +227,13 @@ class Scene extends BaseScene{
 					"deleteable": false
 				} as ElementDefn;
 			});
-			const elements:Element[] = this._sceneProxy.addElementsUsingData(elts);
-			this._elements.push(elements);
+			//const elements:Element[] = this._sceneProxy.addElementsUsingData(elts);
+			//this._elements.push(elements);
 			const elementNames = elts.map((elt:ElementDefn) => elt.props.name);
-			codeModule.addElements({sceneIndex:i, elementNames});
+			useCodeStore().addElements({
+				sceneIndex:i,
+				elementNames
+			});
 		});
 		this._arr.forEach((img: Phaser.GameObjects.Image) => {
 			img.destroy();
@@ -277,7 +272,7 @@ class Scene extends BaseScene{
 		const x = this.getCamera().scrollX;
 		const y = this.getCamera().scrollY;
 		const r:number = 0.25;
-		this._background.setPosition(x + width/2 - x * r, y + height/2 - y * r);
+		this._background!.setPosition(x + width/2 - x * r, y + height/2 - y * r);
 	}
 
 /*
@@ -298,7 +293,7 @@ class Scene extends BaseScene{
 			const data = img.data.getAll() as WayPoint;
 			this._overlap[data._id] = false;
 			if(this.getPhysics().overlap(img, this.player)){
-				const dist = Phaser.Math.Distance.Between(this.player.x, this.player.y, img.x, img.y);
+				const dist = Phaser.Math.Distance.Between(this.player!.x, this.player!.y, img.x, img.y);
 				if(dist < 50) {
 					this._overlap[data._id] = true;
 					if(!prevOverlap[data._id] && !newContact){
@@ -320,7 +315,7 @@ class Scene extends BaseScene{
 								label:"",
 								autoShow: true
 							};
-							dialogModule.setInfo(info);
+							useDialogStore().setInfo(info);
 						}
 					}
 				}
@@ -332,12 +327,12 @@ class Scene extends BaseScene{
 		if(this._ladders && this.player){
 			const ladder = this._ladders.find(ladder=>{
 				const img = ladder as Phaser.GameObjects.Image;
-				return this.physics.overlap(img, this.player) && Math.abs(this.player.x - img.x) < 20;
+				return this.physics.overlap(img, this.player) && Math.abs(this.player!.x - img.x) < 20;
 			});
 			const platform = this._platforms.find(platform=>{
 				return this.physics.overlap(platform, this.player);
 			});
-			this._controller
+			this._controller!
 				.setLadder(!!ladder)
 				.setPlatform(!!platform)
 				.setEnabled(this._enabled)

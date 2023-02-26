@@ -63,15 +63,16 @@ export default class StateMachine {
 		}
 		this.previousState = this.currentState;
 		this.currentState = this.states.get(name);
-		if (this.currentState.onEnter) {
-			this.currentState.onEnter();
+		if (this.currentState!.onEnter) {
+			this.currentState!.onEnter();
 		}
 		this.isChangingState = false;
 	}
 
 	update() {
 		if (this.changeStateQueue.length > 0) {
-			this.setState(this.changeStateQueue.shift());
+			const name = this.changeStateQueue.shift() as string
+			this.setState(name);
 			return;
 		}
 		if (this.currentState && this.currentState.onUpdate) {

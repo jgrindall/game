@@ -1,12 +1,9 @@
 
 import Phaser from "phaser";
 import {Info, PhaserEventData} from "../../types";
-import {GameObject} from "../../../../pip/elements/types";
-import Element from "../../../../pip/elements/Element";
-
-
 import {updateInteractiveBounds} from "../../utils/Utils";
-import dialogModule from "../../store/DialogModule";
+import {useDialogStore} from "../../store/DialogModule";
+
 class ClickManager{
 
     private _scene: Phaser.Scene;
@@ -17,18 +14,18 @@ class ClickManager{
      * Stop listening for hover on this element - this happens when the element is destroyed so it is safe to remove all listeners
      * @param gameObj
      */
-    public remove(gameObj:GameObject){
+    public remove(gameObj:any){
         gameObj
             .off('pointerdown')
             .off('pointerup');
     }
 
-    public updateBounds(gameObj:GameObject) {
+    public updateBounds(gameObj:any) {
         updateInteractiveBounds(gameObj, this._scene.scale.displayScale);
     }
 
     public show(info:Info){
-        dialogModule.setInfo(info);
+        useDialogStore().setInfo(info);
     }
 
     /**
@@ -36,13 +33,13 @@ class ClickManager{
      * @param element
      */
     public addElement(element: Element){
-        const gameObj = element.getGameObject();
+        const gameObj = null;
         const info:Info = {
             position: {
-                x:gameObj.x,
-                y:gameObj.y
+                x:0,
+                y:0
             },
-            description:element.getInfo(),
+            description:[""],
             type:""
         };
         this.add(gameObj, info);
@@ -53,7 +50,7 @@ class ClickManager{
      * @param {GameObject} gameObj
      * @param info
      */
-    public add(gameObj:GameObject, info:Info){
+    public add(gameObj:any, info:Info){
         // @ts-ignore - this is valid
         const bounds = gameObj.getBounds();
 

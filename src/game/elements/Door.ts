@@ -1,6 +1,4 @@
 
-import Element from "../../../pip/elements/Element";
-import ImageTextureLoader from "../../../pip/textures/ImageTextureLoader";
 import BaseScene from "../game/BaseScene";
 import {ElementDefn} from "../types";
 
@@ -29,7 +27,7 @@ class Door extends Element{
         this._onCreated();
     }
     _getTextureLoader(){
-        return new ImageTextureLoader(this.scene, this);
+        //return new ImageTextureLoader(this.scene, this);
     }
     getGameObject(){
         return this._img;
@@ -71,13 +69,13 @@ class Door extends Element{
     remove() {
         super.remove();
         this._img.destroy();
-        this._img = null;
+        //this._img = undefined;
     }
 }
 
-Door.publicPropertyNames = Element.publicPropertyNames;
+/* Door.publicPropertyNames = Element.publicPropertyNames;
 Door.propertyNames = [...Door.publicPropertyNames, "image"];
 Door.methodNames = [...Element.methodNames];
-Door.inspectablePropertyNames = [...Element.inspectablePropertyNames, "image"];
+Door.inspectablePropertyNames = [...Element.inspectablePropertyNames, "image"]; */
 
 export default Door;
