@@ -4,7 +4,7 @@ import GrowAnimation from "../animations/GrowAnimation";
 import Ladder from "../elements/Ladder";
 import LabelManager from "./managers/LabelManager";
 import {ElementDefn, IScene, SectionStatus} from "../types";
-import progressModule from "../store/ProgressModule";
+import {useProgressStore} from "../store/ProgressModule";
 import ClickManager from "./managers/ClickManager";
 import Platform from "../elements/Platform";
 import PlatformManager from "./managers/PlatformManager";
@@ -109,11 +109,11 @@ abstract class BaseScene extends Phaser.Scene implements IScene {
 	}
 
 	protected getSectionProgess():SectionStatus{
-		return progressModule.currentSectionStatus;
+		return useProgressStore().currentSectionStatus;
 	}
 
 	protected getCurrentSectionIndex():number{
-		return progressModule.currentSectionIndex;
+		return useProgressStore().currentSectionIndex;
 	}
 
 	protected addElement(ClassRef: typeof Element, data:any):void {

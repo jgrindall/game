@@ -18,6 +18,9 @@ export const useDialogStore = defineStore('dialog', {
   actions: {
     setInfo(payload: Info) {
         this.info = payload
+    },
+    clearInfo(){
+      this.info = undefined
     }
   }
 })

@@ -1,17 +1,13 @@
 import Phaser from "phaser";
-import Element from "../../../pip/elements/Element";
-import SceneProxy from "../../../pip/canvas/SceneProxy";
-import Completable from "../../../pip/elements/Completable";
-import Animation from "../../../pip/elements/Animation";
 
 const getId = ()=>{
 	//TODO - change this
 	return "25e04c02c" + Math.floor(Math.random() * 100000);
 };
 
-class GrowAnimation extends Completable{
-	grow(scene:Phaser.Scene, target:Element, num:number, _sceneProxy:SceneProxy){
-		console.log("grow", target.getProp("name"));
+class GrowAnimation {
+	grow(scene:Phaser.Scene, target:Element, num:number){
+		/* console.log("grow", target.getProp("name"));
 		const image:string = target.getProp("image");
 		const x:number = target.getProp("x");
 		const y:number = target.getProp("y");
@@ -47,7 +43,7 @@ class GrowAnimation extends Completable{
 			this.onComplete();
 		});
 
-		return elements;
+		return elements; */
 	}
 }
 

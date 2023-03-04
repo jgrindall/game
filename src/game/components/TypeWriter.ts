@@ -7,11 +7,11 @@ import {PhaserEventData} from "../types";
 class TypeWriter extends Phaser.GameObjects.Container {
 
 	private _bitmapText:Phaser.GameObjects.BitmapText;
-	private _bg:Phaser.GameObjects.RenderTexture;
+	//private _bg:Phaser.GameObjects.RenderTexture;
 	private _numChars:number = 0;
 	private _contents:string[];
 	private _index:number =  0;
-	private _timer: Phaser.Time.TimerEvent;
+	private _timer?: Phaser.Time.TimerEvent;
 
 	public static PADDING:number = 24;
 	private static SPEED:number = 15;
@@ -26,7 +26,7 @@ class TypeWriter extends Phaser.GameObjects.Container {
 			.setScale(0.333)
 			.setAlpha(0);
 
-		this._bg = scene.add.nineslice(
+		/* this._bg = scene.add.nineslice(
 			-10,
 			-10,   // this is the starting x/y location
 			100,
@@ -39,7 +39,7 @@ class TypeWriter extends Phaser.GameObjects.Container {
 
 		this
 			.add(this._bg)
-			.add(this._bitmapText);
+			.add(this._bitmapText); */
 
 		this.setScrollFactor(0,0);
 
@@ -69,7 +69,7 @@ class TypeWriter extends Phaser.GameObjects.Container {
 
 		const bounds = this._bitmapText.getTextBounds();
 
-		this._bg.resize(Math.max(150, bounds.global.width + 30), Math.max(bounds.global.height + 30, 50) );
+		//this._bg.resize(Math.max(150, bounds.global.width + 30), Math.max(bounds.global.height + 30, 50) );
 
 		this._bitmapText
 			.setAlpha(1)

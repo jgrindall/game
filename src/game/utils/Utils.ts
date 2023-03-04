@@ -1,7 +1,4 @@
-import {GameObject} from "../../../pip/elements/types";
 import Phaser from "phaser";
-import * as CodeMirror from "codemirror";
-import {Editor} from "codemirror";
 
 export const getUniqueId = ()=>{
 	let d = (window.performance && typeof window.performance.now) ? performance.now() : new Date().getTime();
@@ -12,25 +9,14 @@ export const getUniqueId = ()=>{
 	});
 };
 
-export const promiseEach = <T1, T2>(a:T1[], promiseMaker:(val:T1)=>Promise<T2>)=>{
-	return a.reduce(function(prev, cur) {
-		return prev.then(() => promiseMaker(cur))
-	}, Promise.resolve());
-};
-
-export const updateInteractiveBounds = (gameObj:GameObject, scale:{x:number, y:number}):void => {
-	// @ts-ignore - this is valid
-	const bounds = gameObj.getBounds();
-
-	const w = bounds.width/scale.x;
-	const h = bounds.height/scale.y;
-	gameObj.setInteractive(new Phaser.Geom.Rectangle(0, 0, w, h), Phaser.Geom.Rectangle.Contains);
-	if(gameObj.input){
-		const hitArea =  gameObj.input.hitArea as Phaser.Geom.Rectangle;
-		if(hitArea){
-			hitArea.setSize(w, h);
-		}
-	}
+export const promiseEach = async <T1, T2>(a:T1[], promiseMaker:(val:T1)=>Promise<T2>)=>{
+    const initialValue: T2 = null as unknown as T2
+    const initialValuePromise: Promise<T2> = Promise.resolve(initialValue)
+    const callback = async (previousValue: Promise<T2>, currentValue: T1): Promise<T2>=>{
+        await previousValue
+        return promiseMaker(currentValue)
+    }
+    return a.reduce(callback, initialValuePromise)
 };
 
 
@@ -50,8 +36,13 @@ const defaultOptions = {
     readOnly: false
 };
 
-export const makeCodeMirror = (el:HTMLTextAreaElement, code:string, options?: CodeMirror.EditorConfiguration) : CodeMirror.Editor => {
-    const cm:Editor = CodeMirror.fromTextArea(el, {
+
+
+//export const makeCodeMirror = (el:HTMLTextAreaElement, code:string, options?: CodeMirror.EditorConfiguration) : CodeMirror.Editor => {
+
+export const makeCodeMirror = (el:HTMLTextAreaElement, code:string, options?: any) : any => {
+
+    /*const cm:Editor = CodeMirror.fromTextArea(el, {
         value:code,
             ...defaultOptions,
             ...options
@@ -59,7 +50,9 @@ export const makeCodeMirror = (el:HTMLTextAreaElement, code:string, options?: Co
     cm
         .getDoc()
         .setValue(code);
-    return cm;
+    return cm; */
+
+    return null
 
 };
 

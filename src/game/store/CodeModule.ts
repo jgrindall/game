@@ -3,7 +3,6 @@
  */
 
 
-import store from "./Store";
 import {CodeStatus, Info, Section} from "../types";
 import Vue from "vue";
 import { defineStore } from 'pinia'

@@ -1,17 +1,15 @@
 
-import Element from "../../../pip/elements/Element";
-import ImageTextureLoader from "../../../pip/textures/ImageTextureLoader";
 import BaseScene from "../game/BaseScene";
 import {ElementDefn} from "../types";
 
 const SCALE_FACTOR = 2;  // always smaller so we draw it large and always shrink - this retains some quality
 
 class Ladder extends Element{
-    _img:Phaser.GameObjects.Image;
+    //_img:Phaser.GameObjects.Image;
 
     constructor(data:ElementDefn, scene: BaseScene) {
-        super(data, scene);
-        this._img = scene.getFactory().image(this.getProp("x"), this.getProp("y"), "__DEFAULT");
+        super();
+        /* this._img = scene.getFactory().image(this.getProp("x"), this.getProp("y"), "__DEFAULT");
         this._img.angle = this.getProp("angle");
         this._img.scaleX = this.getProp("scaleX") / SCALE_FACTOR;
         this._img.scaleY = this.getProp("scaleY") / SCALE_FACTOR;
@@ -26,16 +24,16 @@ class Ladder extends Element{
             });
         });
         this._redraw();
-        this._onCreated();
+        this._onCreated(); */
     }
     _getTextureLoader(){
-        return new ImageTextureLoader(this.scene, this);
+        //return new ImageTextureLoader(this.scene, this);
     }
     getGameObject(){
-        return this._img;
+        //return this._img;
     }
     _redraw(){
-        this._textureLoader.getData().then((data:any)=>{
+        /* this._textureLoader.getData().then((data:any)=>{
             const newDescription = data.description;
             if(this._description === newDescription){
                 // do nothing
@@ -58,12 +56,12 @@ class Ladder extends Element{
                 });
                 this._textureLoader.load();
             }
-        });
+        }); */
     }
     remove() {
         super.remove();
-        this._img.destroy();
-        this._img = null;
+        //this._img.destroy();
+        //this._img = null;
     }
     getLabel():null{
         return null;
@@ -72,11 +70,6 @@ class Ladder extends Element{
         return null;
     }
 }
-
-Ladder.publicPropertyNames = Element.publicPropertyNames;
-Ladder.propertyNames = [...Ladder.publicPropertyNames, "image"];
-Ladder.methodNames = [...Element.methodNames];
-Ladder.inspectablePropertyNames = [...Element.inspectablePropertyNames, "image"];
 
 export default Ladder;
 

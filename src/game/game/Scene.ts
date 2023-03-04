@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import {ElementDefn, Info, PhaserEventData, Section, TiledElementDefn, WayPoint, WaypointType} from "../types";
 import PlayerController from "./PlayerController";
 import BaseScene from "./BaseScene";
-import progressModule from '../store/ProgressModule';
+import {useProgressStore} from '../store/ProgressModule';
 import {useDialogStore} from "../store/DialogModule";
 import {useCodeStore} from "../store/CodeModule";
 import {getUniqueId} from "../utils/Utils";
@@ -306,7 +306,7 @@ class Scene extends BaseScene{
 								label:"",
 								autoShow: true
 							};
-							progressModule.waypointReached({waypoint:data, info});
+							useProgressStore().waypointReached({waypoint:data, info});
 						}
 						else if(data._type === WaypointType.INFO){
 							const info:Info = {

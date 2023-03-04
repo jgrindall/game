@@ -12,9 +12,9 @@
     import Phaser from "phaser";
     import Scene from "./Scene";
     import Preload from "./Preload";
-    import levelModule from "../store/LevelModule";
-    import dialogModule from "../store/DialogModule";
-    import progressModule from "../store/ProgressModule";
+    import {useLevelStore} from "../store/LevelModule";
+    import {useDialogStore} from "../store/DialogModule";
+    import {useProgressStore} from "../store/ProgressModule";
     import {Info, Section, SectionProgressType, SectionStatus} from "../types";
     import DialogPlugin from "../plugins/DialogPlugin";
     import HighlightPlugin from "../plugins/HighlightPlugin";
@@ -22,7 +22,17 @@
     import AnimatedTiles from "../plugins/AnimatedTiles"
     import { defineComponent, watch } from 'vue';
 
+    type Data = Partial<{
+        _game: Phaser.Game,
+        _scene: Scene
+    }>
+
     export default defineComponent({
+        data(): Data{
+            return {
+                
+            }
+        },
         methods:{
             startGame(){
                 const AudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
@@ -70,14 +80,14 @@
                     crisp: true
                 };
                 this._game = new Phaser.Game(config);
-
-                this._scene = new Scene();
-                this._game.scene.add("Scene", this._scene, false);
+                const scene: Scene = new Scene();
+                this._scene = scene
+                this._game.scene.add("Scene", scene, false);
                 this._game.events.on('launch', ()=>{
-                    this._game.scene
+                    this._game!.scene
                         .remove("Preload")
                         .start("Scene", {
-                            sections: levelModule.sections
+                            sections: useLevelStore().sections
                         });
                 });
             }
@@ -92,18 +102,18 @@
                 return false;
                 }
                 return true;
-            }.
+            },
             sectionProgress():SectionStatus{
-                return progressModule.currentSectionStatus;
+                return useProgressStore().currentSectionStatus;
             },
             sectionIndex():number{
-                return progressModule.currentSectionIndex;
+                return useProgressStore().currentSectionIndex;
             },
             sections():Section[]{
-                return levelModule.sections;
+                return useLevelStore().sections;
             },
             info(): Info{
-                return dialogModule.info;
+                return useDialogStore().info!;
             }
         },
         watch:{
@@ -114,36 +124,36 @@
             }
             },
             enabled(){
-                this._scene.setEnabled(this.enabled);
+                this._scene!.setEnabled(this.enabled);
             },
             showGrid(){
-                this._scene.showGrid(this.showGrid);
+                this._scene!.showGrid(this.showGrid);
             },
             info(){
-                f(this.info){
-                this._scene.dialogPlugin.show(this.info, ()=>{
-                    dialogModule.setInfo(null);
-                });
+                if(this.info){
+                    this._scene!.dialogPlugin.show(this.info, ()=>{
+                        useDialogStore().clearInfo();
+                    });
             }
             else{
-                this._scene.dialogPlugin.hide();
+                this._scene!.dialogPlugin.hide();
             }
             },
-            sectionProgress(){
+            sectionProgress(oldValue:any, newValue: any){
                 console.log(oldValue, "->", newValue);
-            const newStatus = newValue.status;
-            if(newStatus === SectionProgressType.COMPLETE){
-                // the player moves to the next starting position
-                this._scene.startFollow();
-            }
-            else if(newStatus === SectionProgressType.CODE){
-                // the player must get the code correct in order to proceed
-                const section:Section = progressModule.currentSection;
-                this._scene
-                    .stopFollow()
-                    .setCameraToWaypoint();
+                const newStatus = newValue.status;
+                if(newStatus === SectionProgressType.COMPLETE){
+                    // the player moves to the next starting position
+                    this._scene!.startFollow();
+                }
+                else if(newStatus === SectionProgressType.CODE){
+                    // the player must get the code correct in order to proceed
+                    const section:Section = useProgressStore().currentSection;
+                    this._scene!
+                        .stopFollow()
+                        .setCameraToWaypoint();
 
-            }
+                }
             }
         }
     })

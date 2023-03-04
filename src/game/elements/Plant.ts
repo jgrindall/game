@@ -1,20 +1,18 @@
 
-import Element from "../../../pip/elements/Element";
-import {GROW} from "../../../pip/canvas/Events";
-import ImageTextureLoader from "../../../pip/textures/ImageTextureLoader";
 import BaseScene from "../game/BaseScene";
-import Animation from "../../../pip/elements/Animation";
 import TeleportAnimation from "../animations/TeleportAnimation";
 import {ElementDefn} from "../types";
 
 const SCALE_FACTOR = 2;  // always smaller so we draw it large and always shrink - this retains some quality
 
 class Plant extends Element{
-    _img:Phaser.GameObjects.Image;
+    
+    //_img:Phaser.GameObjects.Image;
 
     constructor(data:ElementDefn, scene: BaseScene) {
-        super(data, scene);
+        super();
         //TODO - perhaps  this._img = scene.lookupById(...)?
+        /*
         this._img = scene.getFactory().image(this.getProp("x"), this.getProp("y"), "__DEFAULT");
         this._img.angle = this.getProp("angle");
         this._img.scaleX = this.getProp("scaleX") / SCALE_FACTOR;
@@ -36,26 +34,24 @@ class Plant extends Element{
             });
         });
         this._redraw();
-        this._onCreated();
+        this._onCreated(); */
     }
     _teleportX(newVal:number){
         const animation = new TeleportAnimation();
-        animation.play(this.scene, this, newVal, this.getProp("y"));
-        window.Sk.animation = animation;
+        //animation.play(this.scene, this, newVal, this.getProp("y"));
     }
     _teleportY(newVal:number){
         const animation = new TeleportAnimation();
-        animation.play(this.scene, this, this.getProp("x"), newVal);
-        window.Sk.animation = animation;
+        //animation.play(this.scene, this, this.getProp("x"), newVal);
     }
     _getTextureLoader(){
-        return new ImageTextureLoader(this.scene, this);
+        //return new ImageTextureLoader(this.scene, this);
     }
     getGameObject(){
-        return this._img;
+        //return this._img;
     }
     _redraw(){
-        this._textureLoader.getData().then((data:any)=>{
+        /* this._textureLoader.getData().then((data:any)=>{
             const newDescription = data.description;
             if(this._description === newDescription){
                 // do nothing
@@ -78,24 +74,18 @@ class Plant extends Element{
                 });
                 this._textureLoader.load();
             }
-        });
+        }); */
     }
     remove() {
         super.remove();
-        this._img.destroy();
-        this._img = null;
+        //this._img.destroy();
     }
     grow(i:number){
-        this.trigger(GROW, this, i);
+        //this.trigger(GROW, this, i);
     }
     explode(){
-        new Animation().tween(this.scene, this.getGameObject(), {x:0, y:0});
+        //new Animation().tween(this.scene, this.getGameObject(), {x:0, y:0});
     }
 }
-
-Plant.publicPropertyNames = Element.publicPropertyNames;
-Plant.propertyNames = [...Plant.publicPropertyNames, "image"];
-Plant.methodNames = [...Element.methodNames, "grow", "explode"];
-Plant.inspectablePropertyNames = [...Element.inspectablePropertyNames, "image"];
 
 export default Plant;

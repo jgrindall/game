@@ -2,9 +2,7 @@
  * store your progress through a level
  */
 
-import {Module, Mutation, VuexModule, getModule, Action} from "vuex-module-decorators";
-import {Vue} from 'vue-property-decorator';
-import store from "./Store";
+import { defineStore } from 'pinia'
 import {
     Info,
     Section,
@@ -14,148 +12,119 @@ import {
     WayPointEnd,
     WayPointStart, WaypointType
 } from "../types";
-import dialogModule from "./DialogModule";
 
-@Module({
-    dynamic: true,
-    name: "progress",
-    store,
-    namespaced: true
-})
+import {useDialogStore} from "./DialogModule";
+import {useLevelStore} from "./LevelModule"
 
-class ProgressModule extends VuexModule {
-
-    private _sectionProgress:SectionProgress = {
-        currentSectionIndex:-1,
-        sectionViewIndex: -1,
-        sectionStatus:[]
-    };
-
-    get sectionViewIndex(): number{
-        return this._sectionProgress.sectionViewIndex;
-    }
-
-    get currentSection():Section{
-        const sections = this.context.rootGetters["level/sections"];
-        return sections[this._sectionProgress.currentSectionIndex];
-    }
-
-    get sectionProgress():SectionProgress{
-        return this._sectionProgress;
-    }
-
-    get currentSectionStatus():SectionStatus{
-        return this._sectionProgress.sectionStatus[this._sectionProgress.currentSectionIndex];
-    }
-
-    get currentSectionIndex():number{
-        return this._sectionProgress.currentSectionIndex;
-    }
-
-    get currentCode():string{
-        return this.currentSectionStatus.code;
-    }
-
-    @Mutation
-    public reset(){
-        this._sectionProgress = {
-            currentSectionIndex:-1,         // section you are on
-            sectionViewIndex:-1,            // section you are viewing
-            sectionStatus:[]
-        };
-    }
-
-    @Mutation
-    private _setSectionProgress(progress: SectionProgress) {
-        this._sectionProgress = progress;
-    }
-
-    @Mutation
-    public setSectionViewIndex(index: number) {
-        this._sectionProgress = {
-            ...this._sectionProgress,
-            sectionViewIndex: index
-        };
-    }
-
-    @Mutation
-    public nextSection() {
-        const currentIndex = this._sectionProgress.currentSectionIndex;
-        this._sectionProgress = {
-            ...this._sectionProgress,
-            currentSectionIndex: currentIndex + 1,
-            sectionViewIndex: currentIndex + 1
-        };
-    }
-
-    @Mutation
-    private _setSectionStatus(status: SectionProgressType) {
-        const index = this._sectionProgress.currentSectionIndex;
-        const sectionStatus:SectionStatus = this._sectionProgress.sectionStatus[index];
-        Vue.set(this._sectionProgress.sectionStatus, index, {
-            ...sectionStatus,
-            status
-        });
-    }
-
-    @Action
-    public setCurrentCode(code: string) {
-        this.currentSectionStatus.code = code;
-    }
-
-    @Action
-    init(payload:SectionProgress){
-        this.context.commit('_setSectionProgress', payload);
-    }
-
-    @Action
-    public startPlayingSection() {
-        this.context.commit('_setSectionStatus', SectionProgressType.PLAY);
-    }
-
-    @Action
-    public waypointReached(payload: {waypoint:WayPointStart | WayPointEnd, info: any}): void{
-        const progress:SectionStatus = this.currentSectionStatus;
-        const index:number = this.currentSectionIndex;
-        const waypoint = payload.waypoint;
-        const info = payload.info;
-
-        console.log(payload)
-        console.log(progress, index)
-
-        if(waypoint._type === WaypointType.START){
-            const startingFirstSection = (progress.status === SectionProgressType.PENDING && waypoint._section === 0);
-            const startingNextSection = (progress.status === SectionProgressType.COMPLETE && waypoint._section === index + 1);
-            if(startingNextSection){
-                console.log("startNextSection!");
-                this.context.commit('nextSection');
-                this.context.commit('_setSectionStatus', SectionProgressType.PENDING);
-            }
-            if(startingFirstSection || startingNextSection){
-                this.context.commit('_setSectionStatus', SectionProgressType.CODE);
-                dialogModule.setInfo(info);
-            }
-        }
-        else if(waypoint._type === WaypointType.END){
-            if(waypoint._section === index && progress.status === SectionProgressType.PLAY){
-                this.sectionComplete();
-            }
-        }
-    }
-
-
-    @Action
-    public sectionComplete(){
-        this.context.commit('_setSectionStatus', SectionProgressType.COMPLETE);
-    }
-
-    @Action({ commit: 'setSectionViewIndex' })
-    public changeViewIndex(increment: number): number{
-        return this._sectionProgress.sectionViewIndex + increment;
-    }
-
+type State = {
+    sectionProgress: SectionProgress
 }
-export default getModule(ProgressModule);
 
+export const useProgressStore = defineStore('progress', {
+    state: (): State => {
+        return {
+            sectionProgress: {
+                currentSectionIndex:-1,
+                sectionViewIndex: -1,
+                sectionStatus:[]
+            }
+        }
+      },
+      getters:{
+        sectionViewIndex(): number{
+            return this.sectionProgress.sectionViewIndex;
+        },
+        currentSection():Section{
+            return useLevelStore().sections[this.sectionProgress.currentSectionIndex];
+        },
+        sectionProgress():SectionProgress{
+            return this.sectionProgress;
+        },
+        currentSectionStatus():SectionStatus{
+            return this.sectionProgress.sectionStatus[this.sectionProgress.currentSectionIndex];
+        },
+        currentSectionIndex():number{
+            return this.sectionProgress.currentSectionIndex;
+        },
+        currentCode():string{
+            return this.currentSectionStatus.code;
+        }
+      },
+      actions: {
+        reset(){
+            this.sectionProgress = {
+                currentSectionIndex:-1,         // section you are on
+                sectionViewIndex:-1,            // section you are viewing
+                sectionStatus:[]
+            };
+        },
+        setSectionProgress(progress: SectionProgress) {
+            this.sectionProgress = progress;
+        },
+        setSectionViewIndex(index: number) {
+            this.sectionProgress = {
+                ...this.sectionProgress,
+                sectionViewIndex: index
+            };
+        },
+        nextSection() {
+            const currentIndex = this.sectionProgress.currentSectionIndex;
+            this.sectionProgress = {
+                ...this.sectionProgress,
+                currentSectionIndex: currentIndex + 1,
+                sectionViewIndex: currentIndex + 1
+            };
+        },
+        setSectionStatus(status: SectionProgressType) {
+            const index = this.sectionProgress.currentSectionIndex;
+            const sectionStatus:SectionStatus = this.sectionProgress.sectionStatus[index]
+            this.sectionProgress.sectionStatus[index] = {
+                ...sectionStatus,
+                status
+            }
+        },
+        setCurrentCode(code: string) {
+            this.currentSectionStatus.code = code;
+        },
+        init(payload:SectionProgress){
+            this.setSectionProgress(payload)
+        },
+        startPlayingSection() {
+            this.setSectionStatus(SectionProgressType.PLAY);
+        },
+        waypointReached(payload: {waypoint:WayPointStart | WayPointEnd, info: any}): void{
+            const progress:SectionStatus = this.currentSectionStatus;
+            const index:number = this.currentSectionIndex;
+            const waypoint = payload.waypoint;
+            const info = payload.info;
 
+            console.log(payload)
+            console.log(progress, index)
 
+            if(waypoint._type === WaypointType.START){
+                const startingFirstSection = (progress.status === SectionProgressType.PENDING && waypoint._section === 0);
+                const startingNextSection = (progress.status === SectionProgressType.COMPLETE && waypoint._section === index + 1);
+                if(startingNextSection){
+                    console.log("startNextSection!");
+                    this.nextSection()
+                    this.setSectionStatus(SectionProgressType.PENDING);
+                }
+                if(startingFirstSection || startingNextSection){
+                    this.setSectionStatus(SectionProgressType.CODE);
+                    useDialogStore().setInfo(info);
+                }
+            }
+            else if(waypoint._type === WaypointType.END){
+                if(waypoint._section === index && progress.status === SectionProgressType.PLAY){
+                    this.sectionComplete();
+                }
+            }
+        },
+        sectionComplete(){
+            this.setSectionStatus(SectionProgressType.COMPLETE)
+        },
+        changeViewIndex(increment: number): void{
+            this.setSectionViewIndex(this.sectionProgress.sectionViewIndex + increment)
+         }
+      }
+})

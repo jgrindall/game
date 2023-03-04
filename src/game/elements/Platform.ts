@@ -1,17 +1,16 @@
 
-import ImageTextureLoader from "../../../pip/textures/ImageTextureLoader";
+
 import BaseScene from "../game/BaseScene";
-import Element from "../../../pip/elements/Element";
 import {ElementDefn} from "../types";
 
 const SCALE_FACTOR = 2;  // always smaller so we draw it large and always shrink - this retains some quality
 
 class Platform extends Element{
-    _img:Phaser.GameObjects.Image;
+    //_img:Phaser.GameObjects.Image;
 
     constructor(data:ElementDefn, scene: BaseScene) {
-        super(data, scene);
-        this._img = scene.getFactory().image(this.getProp("x"), this.getProp("y"), "__DEFAULT");
+        super();
+        /* this._img = scene.getFactory().image(this.getProp("x"), this.getProp("y"), "__DEFAULT");
         this._img.scaleX = this.getProp("scaleX") / SCALE_FACTOR;
         this._img.scaleY = this.getProp("scaleY") / SCALE_FACTOR;
         this._addTextureLoader();
@@ -26,16 +25,16 @@ class Platform extends Element{
             });
         });
         this._redraw();
-        this._onCreated();
+        this._onCreated(); */
     }
     _getTextureLoader(){
-        return new ImageTextureLoader(this.scene, this);
+        //return new ImageTextureLoader(this.scene, this);
     }
     getGameObject(){
-        return this._img;
+        //return this._img;
     }
     _redraw(){
-        this._textureLoader.getData().then((data:any)=>{
+        /* this._textureLoader.getData().then((data:any)=>{
             console.log(data);
             const newDescription = data.description;
             if(this._description === newDescription){
@@ -66,12 +65,11 @@ class Platform extends Element{
                 console.log("load!");
                 this._textureLoader.load();
             }
-        });
+        }); */
     }
     remove() {
         super.remove();
-        this._img.destroy();
-        this._img = null;
+        //this._img.destroy();
     }
     getLabel():null{
         return null;
@@ -80,10 +78,5 @@ class Platform extends Element{
         return null;
     }
 }
-
-Platform.publicPropertyNames = Element.publicPropertyNames;
-Platform.propertyNames = [...Platform.publicPropertyNames, "image"];
-Platform.methodNames = [...Element.methodNames];
-Platform.inspectablePropertyNames = [...Element.inspectablePropertyNames, "image"];
 
 export default Platform;

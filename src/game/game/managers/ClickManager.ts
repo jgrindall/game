@@ -1,7 +1,5 @@
-
 import Phaser from "phaser";
 import {Info, PhaserEventData} from "../../types";
-import {updateInteractiveBounds} from "../../utils/Utils";
 import {useDialogStore} from "../../store/DialogModule";
 
 class ClickManager{
@@ -21,7 +19,7 @@ class ClickManager{
     }
 
     public updateBounds(gameObj:any) {
-        updateInteractiveBounds(gameObj, this._scene.scale.displayScale);
+        //updateInteractiveBounds(gameObj, this._scene.scale.displayScale);
     }
 
     public show(info:Info){

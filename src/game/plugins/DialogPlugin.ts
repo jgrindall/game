@@ -38,7 +38,6 @@ class DialogPlugin extends Phaser.Plugins.ScenePlugin {
                 this.scene.sys.events.off("update", this.update, this);
                 this.scene.sys.events.off("boot", this.boot, this);
             }
-            this.scene = null;
         }
     }
 

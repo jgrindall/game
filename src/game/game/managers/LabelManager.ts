@@ -1,7 +1,7 @@
 import Label from "../../components/Label";
 import Phaser from "phaser";
-import {updateInteractiveBounds} from "../../utils/Utils";
 import BaseScene from "../BaseScene";
+import * as _ from "underscore"
 
 type LabelInfo = {
     text:string,
@@ -47,7 +47,7 @@ class LabelManager{
                 .off('pointerout');
         }
         this.labelInfo = _.reject(this.labelInfo, (entry:LabelInfo)=>{
-            
+            return true
         });
     }
 
@@ -70,7 +70,7 @@ class LabelManager{
     }
 
     public updateBounds(gameObj:any){
-        updateInteractiveBounds(gameObj, this._scene.scale.displayScale);
+        //updateInteractiveBounds(gameObj, this._scene.scale.displayScale);
     }
 
     /**

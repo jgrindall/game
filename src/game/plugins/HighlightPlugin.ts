@@ -6,7 +6,6 @@ export type Highlightable = Phaser.GameObjects.Image | Phaser.GameObjects.Sprite
 class HighlightPlugin extends Phaser.Plugins.ScenePlugin {
 
     protected scene:Phaser.Scene;
-    private _toUpdate:Highlightable;
 
     constructor(scene:Phaser.Scene, pluginManager: Phaser.Plugins.PluginManager) {
         super(scene, pluginManager, "HighlightPlugin");
@@ -30,7 +29,6 @@ class HighlightPlugin extends Phaser.Plugins.ScenePlugin {
             if(this.scene.sys){
                 this.scene.sys.events.off("boot", this.boot, this);
             }
-            this.scene = undefined;
         }
     }
 
@@ -40,12 +38,10 @@ class HighlightPlugin extends Phaser.Plugins.ScenePlugin {
         img.pipeline.set1f('uTextureHeight', h);
         //img.pipeline.set1f('time', 0);
         //img.pipeline.set2fv('resolution', [1024, 768]);
-        this._toUpdate = img;
     }
 
     hideHighlight(img:Highlightable) {
         img.resetPipeline();
-        this._toUpdate = null;
     }
 }
 
