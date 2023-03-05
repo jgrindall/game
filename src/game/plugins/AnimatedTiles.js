@@ -1,4 +1,9 @@
-/* eslint-disable no-undef no-unexpected-multiline*/
+/* eslint-disable no-undef*/
+/* eslint-disable no-unexpected-multiline*/
+/* eslint-disable no-prototype-builtins*/
+/* eslint-disable @typescript-eslint/no-this-alias*/
+/* eslint-disable @typescript-eslint/no-extra-semi*/
+
 
 
 
