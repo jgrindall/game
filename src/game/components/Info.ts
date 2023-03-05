@@ -5,7 +5,7 @@ class Info extends Phaser.GameObjects.Container {
 	private _text:Phaser.GameObjects.BitmapText;
 	private _bg:Phaser.GameObjects.Graphics;
 	private _contents:string;
-	public static PADDING:number = 16;
+	public static PADDING = 16;
 
 	constructor(scene: Phaser.Scene, x: number, y: number, text: string){
 		super(scene, x, y);

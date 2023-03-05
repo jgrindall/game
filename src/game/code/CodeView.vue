@@ -2,7 +2,9 @@
     <div class="code" >
 
         <p class="pm-h2">Task:</p>
-        <div v-for="d in description">{{d}}</div>
+        <div v-for="(d, i) in description" :key="'des' + i">
+            {{d}}
+        </div>
         <p>{{sectionStatus.status}}</p>
 
         <div>
@@ -18,12 +20,12 @@
 
         <div>
 
-              <pm-button :disabled="disableRun" @click="onRunCode()">Run</pm-button>
-            <pm-button :disabled="disableStop" @click="onStopCode()">Stop</pm-button>
-            <pm-button :disabled="disableHints" @click="onResetCode()">Reset</pm-button>
+              <button :disabled="disableRun" @click="onRunCode()">Run</button>
+            <button :disabled="disableStop" @click="onStopCode()">Stop</button>
+            <button :disabled="disableHints" @click="onResetCode()">Reset</button>
 
             <div>
-                <button :disabled="disableHints" @click="showHint(i)" v-for="(hint, i) in hints">Hint</button>
+                <button :disabled="disableHints" @click="showHint(i)" v-for="(hint, i) in hints" :key="'hint' + i">Hint</button>
             </div>
 
 
@@ -31,11 +33,7 @@
     </div>
 </template>
 <script lang="ts">
-    import * as CodeMirror from "codemirror";
-    import {EditorChange, EditorChangeCancellable} from "codemirror";
     import {makeCodeMirror} from "../utils/Utils";
-
-    import pmButton from ".././../../common/components/pm-button.vue";
 
     import {
         Challenge,
@@ -46,15 +44,25 @@
     } from "../types";
     import {useProgressStore} from "../store/ProgressModule";
     import {useCodeStore} from "../store/CodeModule";
+    import {defineComponent, PropType} from "vue"
 
     const CODE_DELAY = 500; //ms between each line
 
+    type Data = {
+        codeMirror: any
+    }
+
     export default defineComponent({
         components: {
-            pmButton:pmButton
+           
+        },
+        data(): Data{
+            return {
+                codeMirror: null
+            }
         },
         mounted(){
-
+            /* 
             this.codeMirror = makeCodeMirror(this.codeMirrorEl, "", {
                 readOnly:  true
             });
@@ -66,10 +74,6 @@
                 }
             });
 
-            //TODO - both needed?
-
-            //TODO - make sure it's the correct section
-
             this.codeMirror.on('change',(_instance:CodeMirror.Editor, changeObj: EditorChange) => {
                 //console.log(changeObj);
                 progressModule.setCurrentCode(_instance.getValue());
@@ -78,124 +82,88 @@
             this.codeMirror.on('changes',(_instance:CodeMirror.Editor, changeObj: EditorChange[]) => {
                 //console.log(changeObj);
                 progressModule.setCurrentCode(_instance.getValue());
-            });
+            }); */
         },
         props:{
-
+            section:{
+                type: Object as PropType<Section>,
+                required: true
+            }
+        },
+        watch:{
+            challenge(){
+                //if(this.displayCode){
+                    //this.setValue(this.displayCode);
+                //}
+            },
+            disabled(){
+                //this.codeMirror.setOption("readOnly", this.disabled);
+            }
         },
         computed:{
-            get disableRun(){
+            disableRun(): boolean{
                 return this.disabled || this.codeStatus === CodeStatus.RUNNING;
-            }
-
-            get sectionStatus():SectionStatus{
-                return progressModule.currentSectionStatus;
-            }
-
-            get currentCode(){
+            },
+            sectionStatus():SectionStatus{
+                return useProgressStore().currentSectionStatus;
+            },
+            currentCode(): string{
                 return this.sectionStatus ? this.sectionStatus.code : "";
-            }
-
-            get disableStop(){
+            },
+            disableStop(): boolean{
                 return this.disabled || this.codeStatus != CodeStatus.RUNNING;
-            }
-
-            get disableReset(){
+            },
+            disableReset(): boolean{
                 return this.disabled || this.codeStatus != CodeStatus.COMPLETE;
-            }
-
-            get challenge():Challenge{
-                const section:Section = progressModule.currentSection;
+            },
+            challenge():Challenge | null{
+                const section:Section = useProgressStore().currentSection;
                 return section ? section.challenge : null;
-            }
-
-            get codeStatus(): CodeStatus{
-                return codeModule.status;
-            }
-
-            get disableHints(){
+            },
+            codeStatus(): CodeStatus{
+                return useCodeStore().status;
+            },
+            disableHints(): boolean{
                 return this.sectionStatus ? (this.sectionStatus.status !== SectionProgressType.CODE) : true;
-            }
-
-            get description():string[]{
-                return this.challenge.description;
-            }
-
-            get initCode(){
-                return (codeModule.initCode || []).join('\n') + '\n';
-            }
-
-            get disabled(){
+            },
+            description():string[]{
+                return this.challenge ? this.challenge.description : [];
+            },
+            initCode():string{
+                return (useCodeStore().initCode || []).join('\n') + '\n';
+            },
+            disabled(): boolean{
                 return this.sectionStatus ? (this.sectionStatus.status !== SectionProgressType.CODE) : true;
-            }
-
-            get hints():Hint[]{
+            },
+            hints():Hint[]{
                 return (this.section.hints || []);
             }
         },
         methods:{
             showHint(i:number){
-            alert("show hint " + i + this.hints[i].content)
-        }
-
-        setValue(s: string){
-            //console.log("->", s);
-            this.codeMirror.setValue(s);
-        }
-
-        onResetCode(){
-            this.setValue("");
-            this.$emit("reset");
-            progressModule.setCurrentCode("");
-        }
-
-        onStopCode(){
-            this.$emit("stopCode");
-        }
-
-        onRunCode(){
-            this.$emit("runCode", {
-                initCode: this.initCode,
-                code:progressModule.currentCode
-            });
-        }
+                alert("show hint " + i + this.hints[i].content)
+            },
+            setValue(s: string){
+                //console.log("->", s);
+                this.codeMirror.setValue(s);
+            },
+            onResetCode(){
+                this.setValue("");
+                this.$emit("reset");
+                useProgressStore().setCurrentCode("");
+            },
+            onStopCode(){
+                this.$emit("stopCode");
+            },
+            onRunCode(){
+                this.$emit("runCode", {
+                    initCode: this.initCode,
+                    code:useProgressStore().currentCode
+                });
+            }
         }
     })
 
-    @Component({
-        components: {
-            pmButton:pmButton
-        }
-    })
-    export default class CodeView extends Vue {
 
-        private codeMirror: CodeMirror.Editor;
-
-
-        @Prop({type: Object, required: true}) section: Section;
-
-        @Ref('codeMirrorEl')
-        readonly codeMirrorEl!: HTMLTextAreaElement;
-
-        
-
-        
-
-        @Watch("challenge")
-        onChangeChallenge() {
-            //if(this.displayCode){
-                //this.setValue(this.displayCode);
-            //}
-        }
-
-        @Watch("disabled")
-        onChangeDisabled() {
-            this.codeMirror.setOption("readOnly", this.disabled);
-        }
-
-        
-
-       
-    }
 </script>
 

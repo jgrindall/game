@@ -33,25 +33,25 @@ class Preload extends BaseScene {
 		//Phaser.GameObjects.GameObjectFactory.register()
 
 		Phaser.GameObjects.GameObjectFactory.register('typewriter', function (this:Phaser.GameObjects.GameObjectFactory, x:number, y:number, contents:string[], options?: any):TypeWriter {
-			let text:TypeWriter = new TypeWriter(this.scene, x, y, contents, options);
+			const text:TypeWriter = new TypeWriter(this.scene, x, y, contents, options);
 			this.displayList.add(text)
 			return text
 		});
 
 		Phaser.GameObjects.GameObjectFactory.register('label', function (this:Phaser.GameObjects.GameObjectFactory, x:number, y:number, contents:string):Label {
-			let text:Label = new Label(this.scene, x, y, contents);
+			const text:Label = new Label(this.scene, x, y, contents);
 			this.displayList.add(text);
 			return text
 		});
 
 		Phaser.GameObjects.GameObjectFactory.register('info', function (this:Phaser.GameObjects.GameObjectFactory, x:number, y:number, contents:string):Info {
-			let info:Info = new Info(this.scene, x, y, contents);
+			const info:Info = new Info(this.scene, x, y, contents);
 			this.displayList.add(info)
 			return info
 		});
 
 		Phaser.GameObjects.GameObjectFactory.register('challenge', function (this:Phaser.GameObjects.GameObjectFactory, x:number, y:number, contents:string):Challenge {
-			let challenge:Challenge = new Challenge(this.scene, x, y, contents);
+			const challenge:Challenge = new Challenge(this.scene, x, y, contents);
 			this.displayList.add(challenge)
 			return challenge
 		});

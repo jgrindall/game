@@ -1,12 +1,8 @@
 import Phaser from "phaser";
-import Completable from "../../../pip/elements/Completable";
-import Animation from "../../../pip/elements/Animation";
-import Element from "../../../pip/elements/Element";
 
-
-class TeleportAnimation extends Completable{
+class TeleportAnimation {
 	play(scene:Phaser.Scene, element:Element, x:number, y:number){
-		const gameObj = element.getGameObject();
+		/* const gameObj = element.getGameObject();
 		new Animation()
 			.tween(scene, gameObj, {alpha:0})
 			.then(()=>{
@@ -17,7 +13,7 @@ class TeleportAnimation extends Completable{
 					.then(()=>{
 						this.onComplete();
 					});
-		});
+		}); */
 	}
 }
 

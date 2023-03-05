@@ -8,7 +8,7 @@ import Vue from "vue";
 import { defineStore } from 'pinia'
 
 type State = {
-    status?:CodeStatus,
+    status:CodeStatus,
     initCode:string[][]
 }
 

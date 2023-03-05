@@ -1,9 +1,9 @@
 <template>
     <div class="main">
-        <toolbar></toolbar>
+        <the-tool-bar></the-tool-bar>
         <div>
             <canvas-view ref="canvasView"></canvas-view>
-            <code-list @reset="onReset"></code-list>
+            
         </div>
     </div>
 </template>
@@ -11,7 +11,7 @@
 
     import CanvasView from "./game/CanvasView.vue";
     import CodeList from "./code/CodeList.vue";
-    import Toolbar from "./components/Toolbar.vue";
+    import TheToolBar from "./components/TheToolBar.vue";
     import Plant from "./elements/Plant";
     import Door from "./elements/Door";
     import Ladder from "./elements/Ladder";
@@ -26,8 +26,7 @@
     export default defineComponent({
         components: {
             canvasView:CanvasView,
-            toolbar:Toolbar,
-            codeList:CodeList
+            TheToolBar:TheToolBar
         },
         mounted(){
             this.loadProgress();

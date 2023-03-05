@@ -8,13 +8,13 @@ class TypeWriter extends Phaser.GameObjects.Container {
 
 	private _bitmapText:Phaser.GameObjects.BitmapText;
 	//private _bg:Phaser.GameObjects.RenderTexture;
-	private _numChars:number = 0;
+	private _numChars = 0;
 	private _contents:string[];
-	private _index:number =  0;
+	private _index =  0;
 	private _timer?: Phaser.Time.TimerEvent;
 
-	public static PADDING:number = 24;
-	private static SPEED:number = 15;
+	public static PADDING = 24;
+	private static SPEED = 15;
 
 	constructor(scene: Phaser.Scene, x: number, y: number, contents: string[], options?: any){
 		super(scene, x, y);

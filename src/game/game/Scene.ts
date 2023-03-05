@@ -104,7 +104,7 @@ class Scene extends BaseScene{
 		const src = this.player.texture.getSourceImage();
 		//this.highlightPlugin.showHighlight(this.player, src.width/4, src.height/2);
 		this._controller = new PlayerController(this.player, this.cursors);
-		let body:Phaser.Physics.Arcade.Body = (this.player.body as Phaser.Physics.Arcade.Body);
+		const body:Phaser.Physics.Arcade.Body = (this.player.body as Phaser.Physics.Arcade.Body);
 		body.setCollideWorldBounds(true);
 		body.setBounce(0.05, 0.05);
 
@@ -174,7 +174,7 @@ class Scene extends BaseScene{
 	}
 
 	protected addLights(){
-		let light = this.add.pointlight(700, 300, 0x8888cc, 90, 0.05);
+		const light = this.add.pointlight(700, 300, 0x8888cc, 90, 0.05);
 
 		//this._laser = this.add.image(200, 200, "waypoint");
 		//this._laser.scaleX = 20;
@@ -271,7 +271,7 @@ class Scene extends BaseScene{
 		const height = this.scale.height;
 		const x = this.getCamera().scrollX;
 		const y = this.getCamera().scrollY;
-		const r:number = 0.25;
+		const r = 0.25;
 		this._background!.setPosition(x + width/2 - x * r, y + height/2 - y * r);
 	}
 

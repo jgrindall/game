@@ -44,13 +44,13 @@ export abstract class AState implements IState{
 		this.stateMachine.setState(name);
 	}
 	onEnter(){
-
+		//override
 	}
 	onExit(){
-
+		//override
 	}
 	onUpdate(options:UpdateOptions){
-
+		//override
 	}
 }
 

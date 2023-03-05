@@ -3,7 +3,7 @@ import Phaser from 'phaser';
 class Challenge extends Phaser.GameObjects.Container {
 
 	private _text:Phaser.GameObjects.BitmapText;
-	public static PADDING:number = 16;
+	public static PADDING = 16;
 
 	constructor(scene: Phaser.Scene, x: number, y: number, text: string){
 		super(scene, x, y);

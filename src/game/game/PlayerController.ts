@@ -136,9 +136,9 @@ class PlayerController{
 	private gameObj: Phaser.GameObjects.Sprite;
 	private body: Phaser.Physics.Arcade.Body;
 	private stateMachine:StateMachine;
-	private ladder:boolean = false;
+	private ladder = false;
 	private platform: any;
-	private _enabled: boolean = true;
+	private _enabled = true;
 	private _states: Record<StateNames, IState>;
 
 	constructor(gameObj:Phaser.GameObjects.Sprite, cursors:CursorKeys) {

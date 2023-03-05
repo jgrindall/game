@@ -5,7 +5,7 @@ export interface IState {
 	onExit?: () => void
 }
 
-let idCount:number = 0;
+let idCount = 0;
 
 export default class StateMachine {
 	private id = (++idCount).toString();

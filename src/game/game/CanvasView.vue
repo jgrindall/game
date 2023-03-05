@@ -2,7 +2,7 @@
     <div class="canvas">
         <canvas id="myCanvas" ref="myCanvas" width="1024" height="768"></canvas>
         <div id="debug">
-            <textarea>{{sectionIndex}} : {{sectionProgress}}</textarea>
+            <textarea >{{sectionIndex}} : {{sectionProgress}}</textarea>
             <textarea>{{enabled}}</textarea>
             <textarea>{{info}}</textarea>
         </div>

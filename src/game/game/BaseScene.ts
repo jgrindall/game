@@ -24,7 +24,7 @@ abstract class BaseScene extends Phaser.Scene implements IScene {
 	protected _ladders:Phaser.GameObjects.GameObject[] = [];
 	protected _platforms:Phaser.GameObjects.GameObject[] = [];
 
-	protected _enabled:boolean = true;
+	protected _enabled = true;
 
 	constructor(config:any) {
 		super({
@@ -93,7 +93,9 @@ abstract class BaseScene extends Phaser.Scene implements IScene {
 		return this._enabled;
 	}
 
-	public setup(){}
+	public setup(){
+		//override
+	}
 
 	protected onResize(){
 		this.scale.displaySize.setAspectRatio( 1024/768 );
@@ -117,7 +119,7 @@ abstract class BaseScene extends Phaser.Scene implements IScene {
 	}
 
 	protected addElement(ClassRef: typeof Element, data:any):void {
-		
+		console.log("add");
 	}
 
 	public getPhysics(){
@@ -129,24 +131,24 @@ abstract class BaseScene extends Phaser.Scene implements IScene {
 	}
 
 	protected addElements(){
-
+		console.log("addElements");
 	}
 
 	public reset(){
-		
+		console.log("reset");
 	}
 
 	public removeElement(data:ElementDefn) {
-		
+		console.log("removeElement");
 	}
 	protected getGroup(): Phaser.GameObjects.Group{
 		if(!this._foregroundGroup){
 			this._foregroundGroup = this.getFactory().group({
 				createCallback: ()=>{
-
+					console.log('createCallback')
 				},
 				removeCallback:()=>{
-
+					console.log('removeCallback')
 				}
 			});
 		}

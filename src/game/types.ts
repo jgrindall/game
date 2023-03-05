@@ -76,7 +76,7 @@ export type Section = {
 }
 
 export type PlatformData = {
-
+    speed?:number
 };
 
 export type TiledElementDefn = {

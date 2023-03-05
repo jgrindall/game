@@ -6,12 +6,13 @@
                 class="selectSection"
                 :class="{'active': i === index}"
                 v-for="(_section, i) in sections"
+                :key="'section' + i"
                 @click="viewSection(i)">
             {{i}}
         </button>
 
         <ul>
-            <li v-for="(section, i) in sections" :class="{'active': i === index}">
+            <li v-for="(section, i) in sections" :class="{'active': i === index}" :key="'section' + i">
                 <code-view
                         :section="section"
                         @runCode="onRunCode"
@@ -25,12 +26,13 @@
     import CodeView from "./CodeView.vue";
     import {useLevelStore} from "../store/LevelModule";
     import {useProgressStore} from "../store/ProgressModule";
-    import {ISkulptError, ISkulptSuspension, SectionProgressType, SectionStatus} from "../types";
+    import {ISkulptError, ISkulptSuspension, SectionProgressType, SectionStatus, Section} from "../types";
     import {useCodeStore} from "../store/CodeModule";
+    import {defineComponent} from "vue"
 
     const CODE_DELAY = 500; //ms between each line
 
-    private playTimeout: number = 0;
+    let playTimeout = 0;
 
     export default defineComponent({
         components: {
@@ -40,33 +42,30 @@
 
         },
         computed:{
-            get sections(){
-            return useLevelStore().sections;
-        }
-
-        get sectionStatus():SectionStatus{
-            return useProgressStore().currentSectionStatus;
-        }
-
-        get enabled(): boolean{
-            return this.sectionStatus ? (this.sectionStatus.status === SectionProgressType.CODE) : false;
-        }
-        get index(){
-            return useProgressStore().sectionViewIndex;
-        }
+            sections(): Section[]{
+                return useLevelStore().sections;
+            },
+            sectionStatus():SectionStatus{
+                return useProgressStore().currentSectionStatus;
+            },
+            enabled(): boolean{
+                return this.sectionStatus ? (this.sectionStatus.status === SectionProgressType.CODE) : false;
+            },
+            index(): number{
+                return useProgressStore().sectionViewIndex;
+            }
         },
         methods:{
             onStopCode(){
-            //const codeRunner = CodeRunner.getInstance();
-            codeRunner.stop();
-        }
-        viewSection(i:number){
-            progressModule.setSectionViewIndex(i);
-        }
-        
-        onRunCode(data:{initCode:string, code:string}){
-           
-        }
+                //const codeRunner = CodeRunner.getInstance();
+                //codeRunner.stop();
+            },
+            viewSection(i:number){
+                useProgressStore().setSectionViewIndex(i);
+            },
+            onRunCode(data:{initCode:string, code:string}){
+                //TODO
+            }
         }
     })
 

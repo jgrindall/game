@@ -24,13 +24,21 @@
 
     export default defineComponent({
         mounted() {
-            
+            //
         },
         methods:{
-            onClickNew(){},
-            onClickLoad(){},
-            onClickSave(){},
-            onClickPlay(){}
+            onClickNew(){
+                //
+            },
+            onClickLoad(){
+                //
+            },
+            onClickSave(){
+                //
+            },
+            onClickPlay(){
+                //
+            }
         }
     })
 

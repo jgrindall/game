@@ -13,7 +13,9 @@ module.exports = {
   },
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    "vue/no-textarea-mustache": "off",
+    "@typescript-eslint/ban-ts-comment": "off"
   },
   overrides: [
     {

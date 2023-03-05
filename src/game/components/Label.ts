@@ -7,7 +7,7 @@ class Label extends Phaser.GameObjects.Container {
 	private _text: Phaser.GameObjects.BitmapText;
 	private _bg: Phaser.GameObjects.RenderTexture;
 	private _contents:string;
-	public static PADDING:number = 16;
+	public static PADDING = 16;
 
 	constructor(scene: Phaser.Scene, x: number, y: number, text: string){
 		super(scene, x, y);
@@ -19,7 +19,7 @@ class Label extends Phaser.GameObjects.Container {
 			.setScale(1.0);
 
 
-		var style = { font: "25px Arial", fill: "#222222", align: "center" };
+		const style = { font: "25px Arial", fill: "#222222", align: "center" };
 
 		const _text2 = scene.add.text(30, 70, "Hello", style);
 

@@ -20,7 +20,7 @@ class HighlightPlugin extends Phaser.Plugins.ScenePlugin {
     }
 
     shutdown() {
-
+        console.log("shutdown")
     }
 
     destroy() {

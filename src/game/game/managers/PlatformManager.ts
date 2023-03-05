@@ -6,7 +6,7 @@ enum Directions {
 }
 
 //TODO - only working for one at the moment
-let dir = Directions.UP;
+const dir = Directions.UP;
 
 type PlatformData  = {
     _top:number,
@@ -19,7 +19,7 @@ class PlatformManager{
 
     private _scene: Phaser.Scene;
     private _platforms:Element[] = [];
-    private _enabled: boolean = true;
+    private _enabled = true;
 
 
     constructor(scene: Phaser.Scene){
@@ -27,7 +27,7 @@ class PlatformManager{
     }
 
     remove(gameObj:any){
-
+        console.log("remove")
     }
 
     update(){

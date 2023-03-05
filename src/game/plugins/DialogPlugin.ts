@@ -20,7 +20,7 @@ class DialogPlugin extends Phaser.Plugins.ScenePlugin {
     }
 
     update(time:number, delta:number) {
-
+        console.log("update")
     }
 
     shutdown() {
